@@ -24,17 +24,18 @@ use std::marker::PhantomData;
 // Constants
 
 /// The possible applications for the codec.
+/// All of the types of these is u32 in audiopus_sys
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-#[repr(u32)]
+#[repr(i32)]
 pub enum Application {
 	/// Best for most VoIP/videoconference applications where listening quality
 	/// and intelligibility matter most.
-	Voip = ffi::OPUS_APPLICATION_VOIP,
+	Voip = ffi::OPUS_APPLICATION_VOIP as i32,
 	/// Best for broadcast/high-fidelity application where the decoded audio
 	/// should be as close as possible to the input.
-	Audio = ffi::OPUS_APPLICATION_AUDIO,
+	Audio = ffi::OPUS_APPLICATION_AUDIO as i32,
 	/// Only use when lowest-achievable latency is what matters most.
-	LowDelay = ffi::OPUS_APPLICATION_RESTRICTED_LOWDELAY,
+	LowDelay = ffi::OPUS_APPLICATION_RESTRICTED_LOWDELAY as i32,
 }
 
 /// The available channel setings.
@@ -48,10 +49,10 @@ pub enum Channels {
 
 /// The available bandwidth level settings.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-#[repr(u32)]
+#[repr(i32)]
 pub enum Bandwidth {
 	/// Auto/default setting.
-	Auto = ffi::OPUS_AUTO,
+	Auto = ffi::OPUS_AUTO as i32, // this is u32 in audiopus_sys
 	/// 4kHz bandpass.
 	Narrowband = ffi::OPUS_BANDWIDTH_NARROWBAND,
 	/// 6kHz bandpass.
@@ -65,7 +66,7 @@ pub enum Bandwidth {
 }
 
 impl Bandwidth {
-	fn from_int(value: u32) -> Option<Bandwidth> {
+	fn from_int(value: i32) -> Option<Bandwidth> {
 		Some(match value {
 			ffi::OPUS_AUTO => Bandwidth::Auto,
 			ffi::OPUS_BANDWIDTH_NARROWBAND => Bandwidth::Narrowband,
@@ -78,7 +79,7 @@ impl Bandwidth {
 	}
 
 	fn decode(value: i32, what: &'static str) -> Result<Bandwidth> {
-		match Bandwidth::from_int(value as u32) {
+		match Bandwidth::from_int(value) {
 			Some(bandwidth) => Ok(bandwidth),
 			None => Err(Error::bad_arg(what)),
 		}
@@ -87,7 +88,7 @@ impl Bandwidth {
 
 /// Possible error codes.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
-#[repr(u32)]
+#[repr(i32)]
 pub enum ErrorCode {
 	/// One or more invalid/out of range arguments.
 	BadArg = ffi::OPUS_BAD_ARG,
@@ -110,7 +111,7 @@ pub enum ErrorCode {
 impl ErrorCode {
 	fn from_int(value: c_int) -> ErrorCode {
 		use ErrorCode::*;
-		match value as c_uint {
+		match value {
 			ffi::OPUS_BAD_ARG => BadArg,
 			ffi::OPUS_BUFFER_TOO_SMALL => BufferTooSmall,
 			ffi::OPUS_INTERNAL_ERROR => InternalError,
