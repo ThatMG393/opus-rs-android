@@ -24,7 +24,7 @@ use std::marker::PhantomData;
 
 /// The possible applications for the codec.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-#[repr(i32)]
+#[repr(u32)]
 pub enum Application {
 	/// Best for most VoIP/videoconference applications where listening quality
 	/// and intelligibility matter most.
@@ -47,7 +47,7 @@ pub enum Channels {
 
 /// The available bandwidth level settings.
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-#[repr(i32)]
+#[repr(u32)]
 pub enum Bandwidth {
 	/// Auto/default setting.
 	Auto = ffi::OPUS_AUTO,
@@ -64,7 +64,7 @@ pub enum Bandwidth {
 }
 
 impl Bandwidth {
-	fn from_int(value: i32) -> Option<Bandwidth> {
+	fn from_int(value: u32) -> Option<Bandwidth> {
 		Some(match value {
 			ffi::OPUS_AUTO => Bandwidth::Auto,
 			ffi::OPUS_BANDWIDTH_NARROWBAND => Bandwidth::Narrowband,
@@ -76,7 +76,7 @@ impl Bandwidth {
 		})
 	}
 
-	fn decode(value: i32, what: &'static str) -> Result<Bandwidth> {
+	fn decode(value: u32, what: &'static str) -> Result<Bandwidth> {
 		match Bandwidth::from_int(value) {
 			Some(bandwidth) => Ok(bandwidth),
 			None => Err(Error::bad_arg(what)),
@@ -86,7 +86,7 @@ impl Bandwidth {
 
 /// Possible error codes.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
-#[repr(i32)]
+#[repr(u32)]
 pub enum ErrorCode {
 	/// One or more invalid/out of range arguments.
 	BadArg = ffi::OPUS_BAD_ARG,
@@ -107,7 +107,7 @@ pub enum ErrorCode {
 }
 
 impl ErrorCode {
-	fn from_int(value: c_int) -> ErrorCode {
+	fn from_int(value: c_uint) -> ErrorCode {
 		use ErrorCode::*;
 		match value {
 			ffi::OPUS_BAD_ARG => BadArg,
@@ -216,7 +216,7 @@ impl Encoder {
 				&mut error,
 			)
 		};
-		if error != ffi::OPUS_OK.try_into().unwrap() || ptr.is_null() {
+		if error != ffi::OPUS_OK as i32 || ptr.is_null() {
 			Err(Error::from_code("opus_encoder_create", error))
 		} else {
 			Ok(Encoder { ptr, channels })
@@ -471,7 +471,7 @@ impl Decoder {
 		let mut error = 0;
 		let ptr =
 			unsafe { ffi::opus_decoder_create(sample_rate as i32, channels as c_int, &mut error) };
-		if error != ffi::OPUS_OK.try_into().unwrap() || ptr.is_null() {
+		if error != ffi::OPUS_OK as i32 || ptr.is_null() {
 			Err(Error::from_code("opus_decoder_create", error))
 		} else {
 			Ok(Decoder { ptr, channels })
