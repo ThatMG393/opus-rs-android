@@ -52,17 +52,17 @@ pub enum Channels {
 #[repr(i32)]
 pub enum Bandwidth {
 	/// Auto/default setting.
-	Auto = ffi::OPUS_AUTO as i32, // this is u32 in audiopus_sys
+	Auto = ffi::OPUS_AUTO,
 	/// 4kHz bandpass.
-	Narrowband = ffi::OPUS_BANDWIDTH_NARROWBAND,
+	Narrowband = ffi::OPUS_BANDWIDTH_NARROWBAND as i32, // this is u32 in audiopus_sys
 	/// 6kHz bandpass.
-	Mediumband = ffi::OPUS_BANDWIDTH_MEDIUMBAND,
+	Mediumband = ffi::OPUS_BANDWIDTH_MEDIUMBAND as i32, // this is u32 in audiopus_sys
 	/// 8kHz bandpass.
-	Wideband = ffi::OPUS_BANDWIDTH_WIDEBAND,
+	Wideband = ffi::OPUS_BANDWIDTH_WIDEBAND as i32, // this is u32 in audiopus_sys
 	/// 12kHz bandpass.
-	Superwideband = ffi::OPUS_BANDWIDTH_SUPERWIDEBAND,
+	Superwideband = ffi::OPUS_BANDWIDTH_SUPERWIDEBAND as i32, // this is u32 in audiopus_sys
 	/// 20kHz bandpass.
-	Fullband = ffi::OPUS_BANDWIDTH_FULLBAND,
+	Fullband = ffi::OPUS_BANDWIDTH_FULLBAND as i32, // this is u32 in audiopus_sys
 }
 
 impl Bandwidth {
