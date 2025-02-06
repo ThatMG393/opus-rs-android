@@ -69,11 +69,11 @@ impl Bandwidth {
 	fn from_int(value: i32) -> Option<Bandwidth> {
 		Some(match value {
 			ffi::OPUS_AUTO => Bandwidth::Auto,
-			ffi::OPUS_BANDWIDTH_NARROWBAND => Bandwidth::Narrowband,
-			ffi::OPUS_BANDWIDTH_MEDIUMBAND => Bandwidth::Mediumband,
-			ffi::OPUS_BANDWIDTH_WIDEBAND => Bandwidth::Wideband,
-			ffi::OPUS_BANDWIDTH_SUPERWIDEBAND => Bandwidth::Superwideband,
-			ffi::OPUS_BANDWIDTH_FULLBAND => Bandwidth::Fullband,
+			ffi::OPUS_BANDWIDTH_NARROWBAND as i32 => Bandwidth::Narrowband,
+			ffi::OPUS_BANDWIDTH_MEDIUMBAND as i32 => Bandwidth::Mediumband,
+			ffi::OPUS_BANDWIDTH_WIDEBAND as i32 => Bandwidth::Wideband,
+			ffi::OPUS_BANDWIDTH_SUPERWIDEBAND as i32 => Bandwidth::Superwideband,
+			ffi::OPUS_BANDWIDTH_FULLBAND as i32 => Bandwidth::Fullband,
 			_ => return None,
 		})
 	}
@@ -180,7 +180,7 @@ macro_rules! ffi {
 
 macro_rules! ctl {
 	($f:ident, $this:ident, $ctl:path, $($rest:expr),*) => {
-		match unsafe { ffi::$f($this.ptr, $ctl, $($rest),*) } {
+		match unsafe { ffi::$f($this.ptr, $ctl as i32, $($rest),*) } {
 			code if code < 0 => return Err(Error::from_code(
 				concat!(stringify!($f), "(", stringify!($ctl), ")"),
 				code,
