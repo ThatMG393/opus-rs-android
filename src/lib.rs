@@ -17,6 +17,7 @@ extern crate audiopus_sys as ffi;
 use std::convert::TryFrom;
 use std::ffi::CStr;
 use std::os::raw::c_int;
+use std::os::raw::c_uint;
 use std::marker::PhantomData;
 
 // ============================================================================
@@ -76,8 +77,8 @@ impl Bandwidth {
 		})
 	}
 
-	fn decode(value: u32, what: &'static str) -> Result<Bandwidth> {
-		match Bandwidth::from_int(value) {
+	fn decode(value: i32, what: &'static str) -> Result<Bandwidth> {
+		match Bandwidth::from_int(value as u32) {
 			Some(bandwidth) => Ok(bandwidth),
 			None => Err(Error::bad_arg(what)),
 		}
@@ -107,9 +108,9 @@ pub enum ErrorCode {
 }
 
 impl ErrorCode {
-	fn from_int(value: c_uint) -> ErrorCode {
+	fn from_int(value: c_int) -> ErrorCode {
 		use ErrorCode::*;
-		match value {
+		match value as c_uint {
 			ffi::OPUS_BAD_ARG => BadArg,
 			ffi::OPUS_BUFFER_TOO_SMALL => BufferTooSmall,
 			ffi::OPUS_INTERNAL_ERROR => InternalError,
