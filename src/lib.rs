@@ -68,12 +68,12 @@ pub enum Bandwidth {
 impl Bandwidth {
 	fn from_int(value: i32) -> Option<Bandwidth> {
 		Some(match value {
-			ffi::OPUS_AUTO => Bandwidth::Auto,
-			ffi::OPUS_BANDWIDTH_NARROWBAND as i32 => Bandwidth::Narrowband,
-			ffi::OPUS_BANDWIDTH_MEDIUMBAND as i32 => Bandwidth::Mediumband,
-			ffi::OPUS_BANDWIDTH_WIDEBAND as i32 => Bandwidth::Wideband,
-			ffi::OPUS_BANDWIDTH_SUPERWIDEBAND as i32 => Bandwidth::Superwideband,
-			ffi::OPUS_BANDWIDTH_FULLBAND as i32 => Bandwidth::Fullband,
+			val if val == ffi::OPUS_AUTO => Bandwidth::Auto,
+			val if val == ffi::OPUS_BANDWIDTH_NARROWBAND as i32 => Bandwidth::Narrowband,
+			val if val == ffi::OPUS_BANDWIDTH_MEDIUMBAND as i32 => Bandwidth::Mediumband,
+			val if val == ffi::OPUS_BANDWIDTH_WIDEBAND as i32 => Bandwidth::Wideband,
+			val if val == ffi::OPUS_BANDWIDTH_SUPERWIDEBAND as i32 => Bandwidth::Superwideband,
+			val if val == ffi::OPUS_BANDWIDTH_FULLBAND as i32 => Bandwidth::Fullband,
 			_ => return None,
 		})
 	}
